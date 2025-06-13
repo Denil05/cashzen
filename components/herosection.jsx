@@ -39,10 +39,22 @@ const Herosection = () => {
             </p>
             <div className="flex justify-center space-x-4">
                 <Link href="/dashboard">
-                    <Button size='lg' className="px-8">Get Started</Button>
+                    <Button 
+                        size='lg' 
+                        variant='outline'
+                        className="px-8 bg-black text-white hover:bg-white hover:text-black transition-colors duration-300 border-2"
+                    >
+                        Get Started
+                    </Button>
                 </Link>
                 <Link href="https://www.youtube.com/channel/UCpkZW4Qn-N2Gofq148pC4YQ">
-                    <Button size='lg' variant='outline' className="px-8">Watch Demo</Button>
+                    <Button 
+                        size='lg' 
+                        variant='outline' 
+                        className="px-8 bg-white text-black hover:bg-black hover:text-white transition-colors duration-300"
+                    >
+                        Watch Demo
+                    </Button>
                 </Link>
             </div>
             <div className="hero-image-wrapper">

@@ -6,7 +6,26 @@ import { cn } from '@/lib/utils';
 import { ArrowDownRight, ArrowUpRight } from 'lucide-react';
 import { format } from 'date-fns';
 import React, { useState } from 'react';
-import { PieChart, Pie, Sector, ResponsiveContainer } from 'recharts';
+import { PieChart, Pie, Sector, ResponsiveContainer, Legend, Cell } from 'recharts';
+
+// Define a vibrant and attractive color palette for the pie chart
+const COLORS = [
+  '#FF6B6B', // Vibrant Coral
+  '#4ECDC4', // Fresh Mint
+  '#45B7D1', // Ocean Blue
+  '#96CEB4', // Soft Sage
+  '#FFD93D', // Bright Yellow
+  '#FF8FB1', // Soft Pink
+  '#B4A7D6', // Lavender
+  '#FF9F45', // Warm Orange
+  '#2ECC71', // Emerald Green
+  '#9B59B6', // Royal Purple
+  '#3498DB', // Sky Blue
+  '#E74C3C', // Cherry Red
+  '#1ABC9C', // Turquoise
+  '#F1C40F', // Sunflower
+  '#34495E', // Deep Blue
+];
 
 const renderActiveShape = (props) => {
   const RADIAN = Math.PI / 180;
@@ -23,7 +42,7 @@ const renderActiveShape = (props) => {
 
   return (
     <g>
-      <text x={cx} y={cy} dy={8} textAnchor="middle" fill={fill}>
+      <text x={cx} y={cy} dy={8} textAnchor="middle" fill={fill} style={{ fontWeight: 'bold' }}>
         {payload.name}
       </text>
       <Sector
@@ -45,8 +64,8 @@ const renderActiveShape = (props) => {
         fill={fill}
       />
       <path d={`M${sx},${sy}L${mx},${my}L${ex},${ey}`} stroke={fill} fill="none" />
-      <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} textAnchor={textAnchor} fill="#333">{`$${value.toFixed(2)}`}</text>
-      <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} dy={18} textAnchor={textAnchor} fill="#999">
+      <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} textAnchor={textAnchor} fill="#333" style={{ fontWeight: 'bold' }}>{`$${value.toFixed(2)}`}</text>
+      <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} dy={18} textAnchor={textAnchor} fill="#666">
         {`(${(percent * 100).toFixed(2)}%)`}
       </text>
     </g>
@@ -105,44 +124,38 @@ const DashboardOverview = ({accounts,transactions}) => {
                     </Select>
                 </CardHeader>
                 <CardContent>
-                    <div className = "space-y-4">
-                        {recentTransactions.length === 0 ? (
-                            <p className="text-center text-muted-foreground py-4">No recent transactions</p>   
-                        ):(
-                            recentTransactions.map((transaction) => {
-                                return (
-                                    <div key={transaction.id} className="flex items-center justify-between">
-                                        <div className="space-y-1">
-                                            <p className="text-sm font-medium leading-none">
-                                                {transaction.description || "Untitled Transaction"}
-                                            </p>
-                                            <p className="text-sm text-muted-foreground">
-                                                {format(new Date(transaction.date), "MMM dd, yyyy")}
-                                            </p>
-                                        </div>
-                                        <div className="flex items-center gap-2"> 
-                                            <div className={cn(
-                                                "flex items-center",
-                                                transaction.type === "EXPENSE"
-                                                ? "text-red-500"
-                                                : "text-green-500"    
-                                            )}>
-                                                {transaction.type === "EXPENSE" ? (
-                                                    <ArrowDownRight className="mr-1 h-4 w-4"/>
-                                                ) : (
-                                                    <ArrowUpRight className="mr-1 h-4 w-4" />   
-                                                )}
-                                                ${transaction.amount.toFixed(2)}
-                                            </div>
-                                        </div>
+                    <div className="space-y-4">
+                        {recentTransactions.map((transaction) => (
+                            <div key={transaction.id} className="flex items-center justify-between">
+                                <div className="flex items-center gap-2">
+                                    <div className={cn(
+                                        "p-2 rounded-full",
+                                        transaction.type === "INCOME" ? "bg-green-100" : "bg-red-100"
+                                    )}>
+                                        {transaction.type === "INCOME" ? (
+                                            <ArrowUpRight className="h-4 w-4 text-green-600" />
+                                        ) : (
+                                            <ArrowDownRight className="h-4 w-4 text-red-600" />
+                                        )}
                                     </div>
-                                );
-                            })
-                        )}
+                                    <div>
+                                        <p className="text-sm font-medium">{transaction.description}</p>
+                                        <p className="text-xs text-muted-foreground">
+                                            {format(new Date(transaction.date), "MMM dd, yyyy")}
+                                        </p>
+                                    </div>
+                                </div>
+                                <p className={cn(
+                                    "text-sm font-medium",
+                                    transaction.type === "INCOME" ? "text-green-600" : "text-red-600"
+                                )}>
+                                    {transaction.type === "INCOME" ? "+" : "-"}${transaction.amount.toFixed(2)}
+                                </p>
+                            </div>
+                        ))}
                     </div>
                 </CardContent>
             </Card>
-
             <Card>
                 <CardHeader>
                     <CardTitle className="text-xl font-semibold">Expense by Category</CardTitle>
@@ -165,6 +178,31 @@ const DashboardOverview = ({accounts,transactions}) => {
                                         fill="#8884d8"
                                         dataKey="value"
                                         onMouseEnter={onPieEnter}
+                                        paddingAngle={2} // Add spacing between pie slices
+                                    >
+                                        {pieChartData.map((entry, index) => (
+                                            <Cell 
+                                                key={`cell-${index}`} 
+                                                fill={COLORS[index % COLORS.length]}
+                                                stroke="#fff" // Add white border between slices
+                                                strokeWidth={2}
+                                            />
+                                        ))}
+                                    </Pie>
+                                    <Legend 
+                                        layout="vertical" 
+                                        align="right"
+                                        verticalAlign="middle"
+                                        formatter={(value, entry) => (
+                                            <span style={{ 
+                                                color: '#333', 
+                                                fontSize: '12px',
+                                                fontWeight: '500',
+                                                marginLeft: '4px'
+                                            }}>
+                                                {value}
+                                            </span>
+                                        )}
                                     />
                                 </PieChart>
                             </ResponsiveContainer>

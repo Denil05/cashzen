@@ -7,35 +7,41 @@ import { LayoutDashboard, PenBox } from "lucide-react";
 import { checkUser } from "@/lib/checkUser";
 
 const Header = async () => {
+  let user = null;
+  
   try {
-    await checkUser();
+    user = await checkUser();
   } catch (error) {
     console.error('Header error:', error);
-    // Continue rendering the header even if user check fails
+    // Don't throw the error, just log it and continue
   }
 
   return (
     <div className="fixed top-0 w-full bg-white/90 backdrop-blur-md z-50 border-b">
       <nav className="container mx-auto px-4 py-4 flex items-center justify-between">
-        <Link href="/">
+        <Link href="/" className="flex items-center">
           <Image 
             src={"/logo.jpg"}
             alt="CashZen"
-            height={60}
-            width={200}
-            className="h-12 w-auto object-contain"
+            width={180}
+            height={45}
+            className="h-12 w-auto object-contain hover:opacity-80 transition-opacity duration-300"
+            priority
           />
         </Link>
         <div className="flex item-center space-x-4">
           <SignedIn>
             <Link href={"/dashboard"} className="text-black hover:text-blue-600 flex gap-2">
-              <Button variant="outline" className="hover:bg-black hover:text-white hover:cursor-pointer">
+              <Button variant="outline" className="hover:bg-black hover:text-white hover:cursor-pointer transition-colors duration-300">
                 <LayoutDashboard size={18}/>
                 <span className="hidden md:inline">Dashboard</span>
               </Button>
             </Link>
             <Link href={"/transaction/create"}>
-              <Button className="flex center gap-2 hover:bg-white hover:text-black hover:cursor-pointer">
+              <Button 
+                variant="outline" 
+                className="flex center gap-2 bg-black text-white hover:bg-white hover:text-black transition-colors duration-300"
+              >
                 <PenBox size={18}/>
                 <span className="hidden md:inline">Add Transaction</span>
               </Button>

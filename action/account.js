@@ -97,9 +97,12 @@ export async function bulkDeleteTransactions(transactionIds){
         });
         if(!user) throw new Error("User not found");
         
+        // Ensure transactionIds is always an array
+        const idsArray = Array.isArray(transactionIds) ? transactionIds : [transactionIds];
+        
         const transactions = await db.transaction.findMany({
             where:{
-                id: {in: transactionIds},
+                id: {in: idsArray},
                 userId: user.id,
             },
         });
@@ -113,7 +116,7 @@ export async function bulkDeleteTransactions(transactionIds){
         await db.$transaction(async (tx) => {
             await tx.transaction.deleteMany({
                 where: {
-                    id: {in: transactionIds},
+                    id: {in: idsArray},
                     userId: user.id,
                 },
             });
