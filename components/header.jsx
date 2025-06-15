@@ -13,7 +13,6 @@ const Header = async () => {
     user = await checkUser();
   } catch (error) {
     console.error('Header error:', error);
-    // Don't throw the error, just log it and continue
   }
 
   return (
