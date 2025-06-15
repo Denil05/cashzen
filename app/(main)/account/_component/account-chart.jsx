@@ -77,7 +77,7 @@ const AccountChart = ({transactions}) => {
             <div className="flex flex-row justify-around mb-6 text-sm">
                 <div className="text-center">
                     <p className="text-muted-foreground">Total Income</p>
-                    <p className="text-lg font-bold text-green-500">
+                    <p className="text-lg font-bold" style={{ color: '#00BFFF' }}>
                         ${total.income.toFixed(2)}
                     </p>
                 </div>
@@ -89,7 +89,7 @@ const AccountChart = ({transactions}) => {
                 </div>
                 <div className="text-center">
                     <p className="text-muted-foreground">Net</p>
-                    <p className={`text-lg font-bold ${total.income - total.expense > 0 ? "text-green-500" : "text-red-500"}`}>
+                    <p className={`text-lg font-bold ${total.income - total.expense > 0 ? "text-blue-500" : "text-red-500"}`}>
                         ${(total.income - total.expense).toFixed(2)}
                     </p>
                 </div>
@@ -105,24 +105,30 @@ const AccountChart = ({transactions}) => {
                     bottom: 0,
                 }}
                 >
-                <CartesianGrid strokeDasharray="3 3" vertical={false}/>
-                <XAxis dataKey="date" />
-                <YAxis fontSize = {12} tickline = {false} axisline = {false} tickFormatter={(value) => `$${value.toFixed(2)}.`} />
-                <Tooltip formatter={(value) => [`$${value}`,undefined]} />
-                <Legend />
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="currentColor" strokeOpacity={0.3}/>
+                <XAxis dataKey="date" stroke="currentColor" tick={{ fill: 'currentColor' }}/>
+                <YAxis fontSize = {12} tickline = {false} axisline = {false} tickFormatter={(value) => `$${value.toFixed(2)}.`} stroke="currentColor" tick={{ fill: 'currentColor' }}/>
+                <Tooltip 
+                    formatter={(value) => [`$${value}`, undefined]} 
+                    contentStyle={{ backgroundColor: 'rgba(0, 0, 0, 0.7)', border: '1px solid currentColor', color: 'currentColor' }} 
+                    labelStyle={{ color: 'currentColor' }}
+                />
+                <Legend 
+                    wrapperStyle={{ color: 'currentColor' }}
+                />
                 <Bar 
                     dataKey="income" 
                     name = "Income" 
-                    fill="#22c55e" 
+                    fill="#00FFFF" // Neon Cyan
                     radius = {[4,4,0,0]} 
-                    // activeBar={<Rectangle fill="pink" stroke="blue" />} 
+                    activeBar={<Rectangle fill="#00FFFF" stroke="#00FFFF" strokeWidth={2} filter="drop-shadow(0px 0px 8px #00FFFF)" />} 
                 />
                 <Bar 
                     dataKey="expense" 
                     name = "Expense" 
-                    fill="#ef4444" 
+                    fill="#FF00FF" // Neon Magenta
                     radius = {[4,4,0,0]} 
-                    // activeBar={<Rectangle fill="gold" stroke="purple" />} 
+                    activeBar={<Rectangle fill="#FF00FF" stroke="#FF00FF" strokeWidth={2} filter="drop-shadow(0px 0px 8px #FF00FF)" />} 
                 />
                 </BarChart>
                 </ResponsiveContainer>

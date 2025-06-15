@@ -10,21 +10,16 @@ import { PieChart, Pie, Sector, ResponsiveContainer, Legend, Cell } from 'rechar
 
 // Define a vibrant and attractive color palette for the pie chart
 const COLORS = [
-  '#FF6B6B', // Vibrant Coral
-  '#4ECDC4', // Fresh Mint
-  '#45B7D1', // Ocean Blue
-  '#96CEB4', // Soft Sage
-  '#FFD93D', // Bright Yellow
-  '#FF8FB1', // Soft Pink
-  '#B4A7D6', // Lavender
-  '#FF9F45', // Warm Orange
-  '#2ECC71', // Emerald Green
-  '#9B59B6', // Royal Purple
-  '#3498DB', // Sky Blue
-  '#E74C3C', // Cherry Red
-  '#1ABC9C', // Turquoise
-  '#F1C40F', // Sunflower
-  '#34495E', // Deep Blue
+  '#00FFFF', // Cyan - Neon Blue
+  '#FF00FF', // Magenta - Neon Pink
+  '#FF1493', // Deep Pink - Hot Pink Neon
+  '#8A2BE2', // Blue Violet - Electric Purple
+  '#00BFFF', // Deep Sky Blue - Bright Blue
+  '#7B68EE', // Medium Slate Blue - Cool Purple
+  '#A020F0', // Purple
+  '#FF007F', // Rose
+  '#40E0D0', // Turquoise (New)
+  '#EE82EE', // Violet (New)
 ];
 
 const renderActiveShape = (props) => {
@@ -53,6 +48,7 @@ const renderActiveShape = (props) => {
         startAngle={startAngle}
         endAngle={endAngle}
         fill={fill}
+        style={{ filter: 'drop-shadow(0px 0px 8px rgba(0,0,0,0.5))', transition: 'all 0.3s ease' }} // Add glow effect
       />
       <Sector
         cx={cx}
@@ -62,10 +58,11 @@ const renderActiveShape = (props) => {
         innerRadius={outerRadius + 6}
         outerRadius={outerRadius + 10}
         fill={fill}
+        style={{ filter: 'drop-shadow(0px 0px 8px rgba(0,0,0,0.5))', transition: 'all 0.3s ease' }} // Add glow effect
       />
       <path d={`M${sx},${sy}L${mx},${my}L${ex},${ey}`} stroke={fill} fill="none" />
-      <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} textAnchor={textAnchor} fill="#333" style={{ fontWeight: 'bold' }}>{`$${value.toFixed(2)}`}</text>
-      <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} dy={18} textAnchor={textAnchor} fill="#666">
+      <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} textAnchor={textAnchor} fill="currentColor" style={{ fontWeight: 'bold' }}>{`$${value.toFixed(2)}`}</text>
+      <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} dy={18} textAnchor={textAnchor} fill="currentColor">
         {`(${(percent * 100).toFixed(2)}%)`}
       </text>
     </g>
@@ -184,8 +181,8 @@ const DashboardOverview = ({accounts,transactions}) => {
                                             <Cell 
                                                 key={`cell-${index}`} 
                                                 fill={COLORS[index % COLORS.length]}
-                                                stroke="#fff" // Add white border between slices
-                                                strokeWidth={2}
+                                                stroke="none" // Remove stroke to enhance neon look
+                                                style={{ filter: 'drop-shadow(0px 0px 4px rgba(0,0,0,0.3))', transition: 'all 0.3s ease' }} // Add subtle glow
                                             />
                                         ))}
                                     </Pie>
@@ -195,7 +192,7 @@ const DashboardOverview = ({accounts,transactions}) => {
                                         verticalAlign="middle"
                                         formatter={(value, entry) => (
                                             <span style={{ 
-                                                color: '#333', 
+                                                color: 'currentColor', // Use currentColor for theme adaptability
                                                 fontSize: '12px',
                                                 fontWeight: '500',
                                                 marginLeft: '4px'

@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Button } from "./ui/button";
 import { LayoutDashboard, PenBox } from "lucide-react";
 import { checkUser } from "@/lib/checkUser";
+import { ThemeToggle } from "./theme-toggle";
 
 const Header = async () => {
   let user = null;
@@ -16,7 +17,7 @@ const Header = async () => {
   }
 
   return (
-    <div className="fixed top-0 w-full bg-white/90 backdrop-blur-md z-50 border-b">
+    <div className="fixed top-0 w-full bg-white/90 dark:bg-gray-900/90 backdrop-blur-md z-50 border-b dark:border-gray-800">
       <nav className="container mx-auto px-4 py-4 flex items-center justify-between">
         <Link href="/" className="flex items-center">
           <Image 
@@ -28,10 +29,11 @@ const Header = async () => {
             priority
           />
         </Link>
-        <div className="flex item-center space-x-4">
+        <div className="flex items-center space-x-4">
+          <ThemeToggle />
           <SignedIn>
-            <Link href={"/dashboard"} className="text-black hover:text-blue-600 flex gap-2">
-              <Button variant="outline" className="hover:bg-black hover:text-white hover:cursor-pointer transition-colors duration-300">
+            <Link href={"/dashboard"}>
+              <Button variant="outline" className="flex items-center gap-2 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black hover:cursor-pointer transition-colors duration-300 h-10">
                 <LayoutDashboard size={18}/>
                 <span className="hidden md:inline">Dashboard</span>
               </Button>
@@ -39,7 +41,7 @@ const Header = async () => {
             <Link href={"/transaction/create"}>
               <Button 
                 variant="outline" 
-                className="flex center gap-2 bg-black text-white hover:bg-white hover:text-black transition-colors duration-300"
+                className="flex items-center gap-2 bg-black text-white hover:bg-white hover:text-black dark:bg-white dark:text-black dark:hover:bg-black dark:hover:text-white transition-colors duration-300 h-10"
               >
                 <PenBox size={18}/>
                 <span className="hidden md:inline">Add Transaction</span>
@@ -48,7 +50,7 @@ const Header = async () => {
             <UserButton 
               appearance={{
                 elements: {
-                  avatarBox: "w-20 h-5",
+                  avatarBox: "w-10 h-10",
                 },
               }}
             />
@@ -56,9 +58,8 @@ const Header = async () => {
 
           <SignedOut>
             <SignInButton forceRedirectUrl="/dashboard">
-              <Button variant="outline">Login</Button>
+              <Button variant="outline" className="dark:border-gray-700 dark:text-white dark:hover:bg-gray-800 h-10">Login</Button>
             </SignInButton>
-            {/* <SignUpButton /> */}
           </SignedOut>
         </div>
       </nav>
