@@ -136,6 +136,32 @@ The application uses Prisma with the following main models:
 3. Protected routes are handled automatically
 4. User profile data is synced with the database
 
+### Background Jobs with Inngest
+The application uses Inngest for handling background jobs and scheduled tasks:
+
+#### Monthly Email Reports
+- **Function**: `monthlyEmailReport`
+- **Trigger**: Runs on the 1st of every month
+- **Purpose**: Sends a comprehensive monthly financial report to users
+- **Features**:
+  - Monthly expense summary
+  - Category-wise breakdown
+  - Budget utilization
+  - Income vs. Expense analysis
+  - Visual charts and graphs
+  - Actionable insights
+
+#### Alert Notifications
+- **Function**: `sendAlert`
+- **Trigger**: Real-time events
+- **Purpose**: Sends immediate notifications for important financial events
+- **Alert Types**:
+  - Budget threshold alerts (when spending reaches 70%, 90%, or exceeds budget)
+  - Unusual spending patterns
+  - Large transactions
+  - Recurring payment reminders
+
+
 ## 📚 Documentation
 
 For detailed documentation about the technologies used:
