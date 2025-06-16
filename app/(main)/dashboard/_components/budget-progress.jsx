@@ -87,17 +87,26 @@ const BudgetProgress = ({initialBudget, currentExpense}) => {
         <CardContent>
             {initialBudget && 
                 <div className="space-y-2">
-                    <Tooltip>
-                        <TooltipTrigger asChild>
-                            <div>
-                                <Progress value={percentUsed} extrastyle={`${percentUsed>=90 ? "bg-red-500" : percentUsed>=70 ? "bg-yellow-500" : "bg-green-500"}`} />
-                                <p className="text-xs text-muted-foreground text-right mt-2">{percentUsed.toFixed(2)}% used</p>
-                            </div>
-                        </TooltipTrigger>
-                        <TooltipContent side="top" align="center" sideOffset={8}>
-                            {percentUsed.toFixed(2)}%
-                        </TooltipContent>
-                    </Tooltip>
+                    <div className="relative">
+                        <Progress value={percentUsed} extrastyle={`${percentUsed>=90 ? "bg-red-500" : percentUsed>=70 ? "bg-yellow-500" : "bg-green-500"}`} />
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <div 
+                                    className="absolute top-0 h-full"
+                                    style={{ 
+                                        left: `${percentUsed}%`,
+                                        transform: 'translateX(-50%)',
+                                        width: '2px',
+                                        backgroundColor: 'transparent'
+                                    }}
+                                />
+                            </TooltipTrigger>
+                            <TooltipContent side="top" align="center" sideOffset={8}>
+                                {percentUsed.toFixed(2)}%
+                            </TooltipContent>
+                        </Tooltip>
+                        <p className="text-xs text-muted-foreground text-right mt-2">{percentUsed.toFixed(2)}% used</p>
+                    </div>
                 </div>
             }
         </CardContent>

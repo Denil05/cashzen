@@ -23,9 +23,15 @@ function Tooltip({
 }
 
 function TooltipTrigger({
+  className,
   ...props
 }) {
-  return <TooltipPrimitive.Trigger data-slot="tooltip-trigger" {...props} />;
+  return (
+    <TooltipPrimitive.Trigger 
+      data-slot="tooltip-trigger" 
+      className={cn("cursor-pointer", className)}
+      {...props} 
+    />);
 }
 
 function TooltipContent({

@@ -34,6 +34,8 @@ const TransactionTable = ({transactions}) => {
     const router = useRouter();
 
     const [selectedIds, setselectedIds]=useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 10;
 
     const [sortConfig, setSortConfigId]=useState({
         field:"date",
@@ -113,6 +115,22 @@ const TransactionTable = ({transactions}) => {
         sortConfig,
     ]);
 
+    // Calculate pagination
+    const totalPages = Math.ceil(filteredAndSortedTransactions.length / itemsPerPage);
+    const paginatedTransactions = filteredAndSortedTransactions.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+    );
+
+    // Reset to first page when filters change
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [searchTerm, typeFilter, recurringFilter]);
+
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    };
+
     const handleSort = (field) => {
         setSortConfigId((prevConfig) => ({
             field,
@@ -146,22 +164,20 @@ const TransactionTable = ({transactions}) => {
             </div>
             <div className="flex gap-2">
                 <Select value={typeFilter} onValueChange={value => setTypeFilter(value)}>
-                    <SelectTrigger>
+                    <SelectTrigger className="border-none shadow-none bg-transparent">
                         <SelectValue placeholder="All Types"/>
                     </SelectTrigger>
                     <SelectContent>
-                        {/* <SelectItem value="">All</SelectItem> */}
                         <SelectItem value="EXPENSE">Expense</SelectItem>
                         <SelectItem value="INCOME">Income</SelectItem>
                     </SelectContent>
                 </Select>
 
                 <Select value={recurringFilter} onValueChange={value => setRecurringFilter(value)}>
-                    <SelectTrigger className="w-[150px]">
+                    <SelectTrigger className="w-[150px] border-none shadow-none bg-transparent">
                         <SelectValue placeholder="All Transaction"/>
                     </SelectTrigger>
                     <SelectContent>
-                        {/* <SelectItem value="">All</SelectItem> */}
                         <SelectItem value="Recurring">Recurrning</SelectItem>
                         <SelectItem value="Non-Recurring">Non-Recurring</SelectItem>
                     </SelectContent>
@@ -208,12 +224,12 @@ const TransactionTable = ({transactions}) => {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {filteredAndSortedTransactions === 0?(
+                    {paginatedTransactions.length === 0 ? (
                         <TableRow>
                             <TableCell colSpan={7} className="text-center text-muted-foreground">No Transaction Found</TableCell>
                         </TableRow>
-                    ):(
-                        filteredAndSortedTransactions.map((transaction)=>(
+                    ) : (
+                        paginatedTransactions.map((transaction)=>(
                             <TableRow key={transaction.id}>
                                 <TableCell>
                                     <Checkbox onCheckedChange={() => handleSelect(transaction.id)} checked={selectedIds.includes(transaction.id)} />
@@ -291,6 +307,85 @@ const TransactionTable = ({transactions}) => {
                 </TableBody>
             </Table>
         </div>
+        
+        {/* Pagination Controls */}
+        {totalPages > 1 && (
+            <div className="flex flex-col items-center justify-center space-y-4">
+                <div className="text-sm text-muted-foreground">
+                    Showing {((currentPage - 1) * itemsPerPage) + 1} to {Math.min(currentPage * itemsPerPage, filteredAndSortedTransactions.length)} of {filteredAndSortedTransactions.length} transactions
+                </div>
+                <div className="flex items-center space-x-2">
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handlePageChange(currentPage - 1)}
+                        disabled={currentPage === 1}
+                    >
+                        Previous
+                    </Button>
+                    <div className="flex items-center space-x-1">
+                        {/* First Page */}
+                        <Button
+                            variant={currentPage === 1 ? "default" : "outline"}
+                            size="sm"
+                            onClick={() => handlePageChange(1)}
+                            className="w-8 h-8 p-0"
+                        >
+                            1
+                        </Button>
+
+                        {/* Left Ellipsis */}
+                        {currentPage > 3 && (
+                            <span className="px-2">...</span>
+                        )}
+
+                        {/* Middle Pages */}
+                        {Array.from({ length: totalPages }, (_, i) => i + 1)
+                            .filter(page => {
+                                if (totalPages <= 7) return true;
+                                if (page === 1 || page === totalPages) return false;
+                                return Math.abs(currentPage - page) <= 2;
+                            })
+                            .map((page) => (
+                                <Button
+                                    key={page}
+                                    variant={currentPage === page ? "default" : "outline"}
+                                    size="sm"
+                                    onClick={() => handlePageChange(page)}
+                                    className="w-8 h-8 p-0"
+                                >
+                                    {page}
+                                </Button>
+                            ))}
+
+                        {/* Right Ellipsis */}
+                        {currentPage < totalPages - 2 && (
+                            <span className="px-2">...</span>
+                        )}
+
+                        {/* Last Page */}
+                        {totalPages > 1 && (
+                            <Button
+                                variant={currentPage === totalPages ? "default" : "outline"}
+                                size="sm"
+                                onClick={() => handlePageChange(totalPages)}
+                                className="w-8 h-8 p-0"
+                            >
+                                {totalPages}
+                            </Button>
+                        )}
+                    </div>
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handlePageChange(currentPage + 1)}
+                        disabled={currentPage === totalPages}
+                    >
+                        Next
+                    </Button>
+                </div>
+            </div>
+        )}
     </div>
   )
 }

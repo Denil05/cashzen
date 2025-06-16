@@ -2,10 +2,18 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { endOfDay, format, setDate, startOfDay, subDays } from 'date-fns';
-import React, { useMemo, useState } from 'react'
+import React, { useMemo, useState, useEffect } from 'react'
 import { Bar, BarChart, CartesianGrid, Legend, Rectangle, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { useTheme } from 'next-themes';
 
 const AccountChart = ({transactions}) => {
+  const { theme, resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  // Ensure component is mounted before rendering to avoid hydration mismatch
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const DATE_RANGES = {
     "7D":{ label: "Last 7 Days", days: 7},
@@ -14,7 +22,6 @@ const AccountChart = ({transactions}) => {
     "6M":{ label: "Last 6 Month", days: 180},
     "1y":{ label: "Last Year", days: 365},
     ALL: { label: "All Time", days: null},
-
   }
 
   const [dateRange,setDateRange] = useState("1M");
@@ -54,7 +61,13 @@ const AccountChart = ({transactions}) => {
         expense: acc.expense + day.expense, 
     }),{income: 0, expense: 0});
   },[filteredData]);
-//   console.log(filteredData);
+
+  // Define colors that work well in both themes
+  const incomeColor = resolvedTheme === 'dark' ? '#00FFFF' : '#22c55e'; // Lighter sky blue for dark mode, green for light mode
+  const expenseColor = resolvedTheme === 'dark' ? '#a855f7' : '#ef4444'; // Purple for dark mode, red for light mode
+
+  // Don't render anything until mounted to avoid hydration mismatch
+  if (!mounted) return null;
 
   return (
         <Card>
@@ -77,19 +90,19 @@ const AccountChart = ({transactions}) => {
             <div className="flex flex-row justify-around mb-6 text-sm">
                 <div className="text-center">
                     <p className="text-muted-foreground">Total Income</p>
-                    <p className="text-lg font-bold" style={{ color: '#00BFFF' }}>
+                    <p className="text-lg font-bold" style={{ color: incomeColor }}>
                         ${total.income.toFixed(2)}
                     </p>
                 </div>
                 <div className="text-center">
                     <p className="text-muted-foreground">Total Expense</p>
-                    <p className="text-lg font-bold text-red-500">
+                    <p className="text-lg font-bold" style={{ color: expenseColor }}>
                         ${total.expense.toFixed(2)}
                     </p>
                 </div>
                 <div className="text-center">
                     <p className="text-muted-foreground">Net</p>
-                    <p className={`text-lg font-bold ${total.income - total.expense > 0 ? "text-blue-500" : "text-red-500"}`}>
+                    <p className="text-lg font-bold" style={{ color: total.income - total.expense > 0 ? incomeColor : expenseColor }}>
                         ${(total.income - total.expense).toFixed(2)}
                     </p>
                 </div>
@@ -119,23 +132,22 @@ const AccountChart = ({transactions}) => {
                 <Bar 
                     dataKey="income" 
                     name = "Income" 
-                    fill="#00FFFF" // Neon Cyan
+                    fill={incomeColor}
                     radius = {[4,4,0,0]} 
-                    activeBar={<Rectangle fill="#00FFFF" stroke="#00FFFF" strokeWidth={2} filter="drop-shadow(0px 0px 8px #00FFFF)" />} 
+                    activeBar={<Rectangle fill={incomeColor} stroke={incomeColor} strokeWidth={2} filter="drop-shadow(0px 0px 8px rgba(56, 189, 248, 0.5))" />} 
                 />
                 <Bar 
                     dataKey="expense" 
                     name = "Expense" 
-                    fill="#FF00FF" // Neon Magenta
+                    fill={expenseColor}
                     radius = {[4,4,0,0]} 
-                    activeBar={<Rectangle fill="#FF00FF" stroke="#FF00FF" strokeWidth={2} filter="drop-shadow(0px 0px 8px #FF00FF)" />} 
+                    activeBar={<Rectangle fill={expenseColor} stroke={expenseColor} strokeWidth={2} filter="drop-shadow(0px 0px 8px rgba(168, 85, 247, 0.5))" />} 
                 />
                 </BarChart>
                 </ResponsiveContainer>
             </div>
           </CardContent>
         </Card>
-        
   );
 };
 
