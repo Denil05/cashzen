@@ -16,6 +16,7 @@ A modern, full-stack expense tracking application built with Next.js that helps 
 - Add custom categories
 - Transaction history with search and filters
 - Bulk transaction operations
+- Recipt scanner for transaction with AI.
 
 ### Financial Analytics
 - Real-time expense tracking
