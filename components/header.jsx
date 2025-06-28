@@ -18,17 +18,19 @@ const Header = async () => {
 
   return (
     <div className="fixed top-0 w-full bg-white/90 dark:bg-gray-900/90 backdrop-blur-md z-50 border-b dark:border-gray-800">
-      <nav className="container mx-auto px-4 py-4 flex items-center justify-between">
-        <Link href="/" className="flex items-center">
-          <Image 
-            src={"/logo.jpg"}
-            alt="CashZen"
-            width={180}
-            height={45}
-            className="h-12 w-auto object-contain hover:opacity-80 transition-opacity duration-300"
-            priority
-          />
-        </Link>
+      <nav className="w-full flex items-center justify-between px-6 py-4">
+        <div className="flex items-center">
+          <Link href="/" className="flex items-center">
+            <Image 
+              src={"/logo.jpg"}
+              alt="CashZen"
+              width={180}
+              height={45}
+              className="h-12 w-auto object-contain hover:opacity-80 transition-opacity duration-300"
+              priority
+            />
+          </Link>
+        </div>
         <div className="flex items-center space-x-4">
           <ThemeToggle />
           <SignedIn>

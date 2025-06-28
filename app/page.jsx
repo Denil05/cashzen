@@ -10,8 +10,8 @@ export default function Home() {
     <div className="mt-40">
       <Herosection/>
       <section className="py-20 bg-blue-50">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-col-2 md:grid-cols-4 gap-6">
+        <div className="container mx-auto px-4">  
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {statsData.map((statsData,index)=>(
               <div key={index} className="text-center">
                 <div className="text-4xl font-bold text-blue-600 mb-2">{statsData.value}</div>
@@ -94,7 +94,7 @@ export default function Home() {
           </p>
           <Link href="/dashboard">
             <Button size="lg" className="bg-white text-blue-600 hover:bg-blue-50 animate-bounce">
-              Start Free Trail
+            Start Free Trail
             </Button>
           </Link>
           
