@@ -16,6 +16,7 @@ A modern, full-stack expense tracking application built with Next.js that helps 
 - Add custom categories
 - Transaction history with search and filters
 - Bulk transaction operations
+- Recipt scanner for transaction with AI.
 
 ### Financial Analytics
 - Real-time expense tracking
@@ -196,6 +197,3 @@ We welcome contributions! Please follow these steps:
 5. Push to the branch (`git push origin feature/amazing-feature`)
 6. Open a Pull Request
 
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
